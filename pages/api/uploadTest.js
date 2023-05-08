@@ -1,7 +1,50 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import formidable from 'formidable';
-import { cwd } from 'process';
+import fs from 'fs';
+import { read, utils as xlsxUtils } from 'xlsx/xlsx.mjs';
+
+export default async function handler(req, res) {
+  const { query } = req;
+  const filePath = `${process.cwd()}/uploads/${query.fileName}`;
+
+  // create a write stream (in append mode)
+  await new Promise((resolve, reject) => {
+    const writeStream = fs.createWriteStream(filePath);
+
+    // pipe the request into writeStream
+    req.pipe(writeStream);
+
+    // resolve promise when request is finished
+    writeStream.on('finish', () => resolve());
+
+    // reject the promise if there's an error writing the file
+    writeStream.on('error', error => reject(error));
+  });
+
+  // req.on('data', chunk => {
+  //   fs.writeFileSync(`${process.cwd()}/uploads/${query.fileName}`, chunk);
+  // });
+
+  await new Promise(resolve => {
+    // Check if the file exists, retrying every 500ms if it doesn't
+    const intervalId = setInterval(() => {
+      if (fs.existsSync(filePath)) {
+        clearInterval(intervalId);
+        resolve();
+      }
+    }, 500);
+  });
+
+  try {
+    const workbookBuffer = fs.readFileSync(filePath);
+    const workbook = await read(workbookBuffer);
+    const gainsListingJSON = xlsxUtils.sheet_to_json(
+      workbook.Sheets['GAINS LISTING']
+    );
+    res.status(200).json({ success: true, data: gainsListingJSON });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, error: error });
+  }
+}
 
 export const config = {
   api: {
@@ -9,41 +52,27 @@ export const config = {
   },
 };
 
-export default async function handler(request, response) {
-  let status = 200,
-    resultBody = { status: 'ok', message: 'Files were uploaded successfully' };
+// const fs = require('fs');
 
-  const files = await new Promise((resolve, reject) => {
-    const form = new formidable.IncomingForm();
-    const files = [];
-    form.on('file', function (field, file) {
-      files.push([field, file]);
-    });
-    form.on('end', () => resolve(files));
-    form.on('error', error => reject(error));
-    form.parse(request, () => {});
-  }).catch(e => {
-    console.log(e);
-    status = 500;
-    resultBody = { status: 'fail', message: 'Upload error' };
-  });
+// async function waitForFile(filePath) {
+//   while (true) {
+//     try {
+//       await fs.promises.access(filePath, fs.constants.F_OK);
+//       const fileContents = await fs.promises.readFile(filePath, 'utf-8');
+//       console.log(`File ${filePath} exists! Contents:`, fileContents);
+//       break;
+//     } catch (err) {
+//       console.error(`File ${filePath} does not exist yet. Retrying in 1 second...`);
+//       await new Promise(resolve => setTimeout(resolve, 1000));
+//     }
+//   }
+// }
 
-  console.log(cwd());
-
-  if (files?.length) {
-    const targetPath = path.join(process.cwd(), `/uploads/`);
-    try {
-      await fs.access(targetPath);
-    } catch (error) {
-      console.log(`couldn't access directory`);
-      console.log(error);
-      await fs.mkdir(targetPath);
-    }
-
-    for (const file of files) {
-      const tempPath = file[1].filepath;
-      await fs.rename(tempPath, targetPath + file[1].originalFilename);
-    }
-  }
-  response.status(status).json(resultBody);
-}
+// waitForFile('/path/to/my/file.txt')
+//   .then(() => {
+//     console.log('Finished waiting for file.');
+//     // Do something with the file now that it exists...
+//   })
+//   .catch(err => {
+//     console.error(`Error waiting for file: ${err}`);
+//   });
