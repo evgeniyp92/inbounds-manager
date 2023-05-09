@@ -1,5 +1,7 @@
 import fs from 'fs';
 import { read, utils as xlsxUtils } from 'xlsx/xlsx.mjs';
+import Inbound from '../../models/Inbound';
+import dbConnect from '@/lib/dbConnect';
 
 export default async function handler(req, res) {
   const { query } = req;
@@ -39,6 +41,24 @@ export default async function handler(req, res) {
     const gainsListingJSON = xlsxUtils.sheet_to_json(
       workbook.Sheets['GAINS LISTING']
     );
+    await new Promise(async (resolve, reject) => {
+      await dbConnect();
+      for (const gain of gainsListingJSON) {
+        try {
+          await Inbound.create({
+            name: gain['FULL_NAME'],
+            rank: gain['GRADE'],
+            afsc: gain['DAFSC'],
+            maritalStatus: gain['MARITAL_STATUS'],
+            assignedSponsor: null,
+            rnltd: new Date((gain['RNLTD'] - 25569) * 86400 * 1000),
+          });
+        } catch (error) {
+          reject(error);
+        }
+      }
+      resolve();
+    });
     res.status(200).json({ success: true, data: gainsListingJSON });
   } catch (error) {
     console.log(error);

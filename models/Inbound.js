@@ -42,7 +42,6 @@ const InboundSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: [true, 'No phone number specified'],
   },
   rnltd: {
     type: Date,
@@ -51,4 +50,4 @@ const InboundSchema = new mongoose.Schema({
 });
 
 module.exports =
-  mongoose.models.User || mongoose.model('Inbound', InboundSchema);
+  mongoose.models.Inbound || mongoose.model('Inbound', InboundSchema);
