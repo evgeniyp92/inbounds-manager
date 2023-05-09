@@ -51,28 +51,3 @@ export const config = {
     bodyParser: false,
   },
 };
-
-// const fs = require('fs');
-
-// async function waitForFile(filePath) {
-//   while (true) {
-//     try {
-//       await fs.promises.access(filePath, fs.constants.F_OK);
-//       const fileContents = await fs.promises.readFile(filePath, 'utf-8');
-//       console.log(`File ${filePath} exists! Contents:`, fileContents);
-//       break;
-//     } catch (err) {
-//       console.error(`File ${filePath} does not exist yet. Retrying in 1 second...`);
-//       await new Promise(resolve => setTimeout(resolve, 1000));
-//     }
-//   }
-// }
-
-// waitForFile('/path/to/my/file.txt')
-//   .then(() => {
-//     console.log('Finished waiting for file.');
-//     // Do something with the file now that it exists...
-//   })
-//   .catch(err => {
-//     console.error(`Error waiting for file: ${err}`);
-//   });
