@@ -60,6 +60,7 @@ export default async function handler(req, res) {
       resolve();
     });
     res.status(200).json({ success: true, data: gainsListingJSON });
+    fs.rmSync(filePath);
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, error: error });

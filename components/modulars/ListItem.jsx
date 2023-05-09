@@ -2,7 +2,6 @@ import Link from 'next/link';
 import StatusPill from './StatusPill';
 import MenuDropDownButton from './MenuDropDownButton';
 import LinkButton from './LinkButton';
-import { faker } from '@faker-js/faker';
 
 const ListItem = props => {
   return (
@@ -11,13 +10,7 @@ const ListItem = props => {
       {/* Information */}
       <div className='flex w-full flex-col items-center space-y-4 md:items-start'>
         <h3 className='text-xl font-bold'>
-          <span>
-            {['AB', 'Amn', 'A1C', 'SrA', 'SSgt'][Math.floor(Math.random() * 5)]}
-          </span>{' '}
-          <span className='uppercase'>{faker.name.lastName()}</span>,{' '}
-          {faker.name.firstName()} | 1D7
-          {[1, 3, 5, 7, 9][Math.floor(Math.random() * 5)]}1
-          {'ABDEX'[Math.floor(Math.random() * 5)]}
+          <span>ENL</span> <span className='uppercase'>[LastName]</span>, [AFSC]
         </h3>
         <div className='flex space-x-4'>
           {props.married && <StatusPill>Married</StatusPill>}
