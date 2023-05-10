@@ -1,37 +1,56 @@
 import React from 'react';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import ListItem from '@/components/modulars/ListItem';
 
-async function getInbounds() {
-  return fetch('http://localhost:3000/api/inbounds').then(res => res.json());
-}
-
-export async function getStaticProps() {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['inbounds'], getInbounds);
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    revalidate: 10,
-  };
-}
+const options = [
+  'apple',
+  'banana',
+  'orange',
+  'pear',
+  'grape',
+  'mango',
+  'ananas',
+];
 
 export default function Home() {
-  const { data, isLoading, isError, isSuccess } = useQuery(
-    ['inbounds'],
-    getInbounds
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [selectedTerm, setSelectedTerm] = React.useState('');
+  const filteredOptions = options.filter(option =>
+    option.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleChange = event => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
-    <div className='flex h-full min-h-screen w-screen bg-zinc-200 font-sans'>
-      <div className='container mx-auto mt-20 max-w-6xl p-4'>
-        {isSuccess &&
-          data.inboundsList.map(inbound => (
-            <ListItem key={inbound._id} inbound={inbound} />
-          ))}
+    <div className='flex w-screen bg-zinc-200 font-sans'>
+      <div className='container mx-auto flex max-w-6xl flex-col'>
+        {/* standardizing buttons */}
+        <button className='button__primary'>Primary Button</button>
+        <button className='button__secondary'>Secondary Button</button>
+        <button className='button__tertiary'>Tertiary Button</button>
+        {/* search box poc */}
+        <div className='relative'>
+          <pre>{selectedTerm}</pre>
+          <input
+            type='text'
+            value={searchTerm}
+            onChange={handleChange}
+            className='w-80 rounded-lg border-2 p-2 shadow-inner outline-none placeholder:italic'
+            placeholder='Search for an assigned member'></input>
+          {searchTerm && (
+            <ul
+              className={`absolute mt-1 max-h-48 w-80 overflow-scroll overscroll-auto rounded-lg border-2 bg-zinc-100`}>
+              {filteredOptions.map(option => (
+                <li
+                  key={option}
+                  onClick={() => setSelectedTerm(option)}
+                  className='border-b-2 p-2 first:rounded-t-lg last:rounded-b-lg last:border-b-0 hover:cursor-pointer hover:bg-zinc-300'>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );

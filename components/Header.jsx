@@ -37,14 +37,20 @@ export default function Header() {
   // todo: write click-away listener, there should be one in this project alreadys
 
   return (
-    <div className='fixed flex h-20 w-screen items-center justify-between bg-zinc-100 p-4 shadow-sm'>
+    <div className='fixed z-50 flex h-20 w-screen items-center justify-between bg-zinc-100 p-4 shadow-lg'>
       <h1 className='w-56 text-xl font-bold'>
-        <Link href={'/'}>Inbounds Manager</Link>
+        <Link href={'/'} className='text-3xl font-light text-purple-700'>
+          Ampere
+        </Link>
       </h1>
-      <div id='menu-links'></div>
+      <div id='menu-links' className='flex flex-auto justify-center space-x-8'>
+        <Link href={'/inbounds'}>Inbounds</Link>
+        <Link href={'/additional-duties'}>Additional Duties</Link>
+        <Link href={'/tcto'}>TCTO Management</Link>
+      </div>
       <div className='flex w-56 justify-end'>
         <div
-          className={`box-border h-10 w-10 rounded-lg border-4 ${
+          className={`box-border flex h-10 w-fit justify-between space-x-2 rounded-lg border-4 px-2 ${
             uploadState.isVisible
               ? `border-zinc-400 bg-zinc-300`
               : `border-zinc-300 bg-zinc-200`
@@ -55,13 +61,14 @@ export default function Header() {
               isVisible: !uploadState.isVisible,
             })
           }>
+          <span className=''>Upload...</span>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='h-full w-full text-zinc-500'>
+            className='h-full text-zinc-500'>
             <path
               strokeLinecap='round'
               strokeLinejoin='round'
@@ -71,7 +78,7 @@ export default function Header() {
         </div>
       </div>
       <div
-        className={`absolute right-2 top-20 w-fit space-y-2 rounded-lg bg-zinc-100 p-4 ${
+        className={`absolute right-2 top-[5.5rem] w-fit space-y-2 rounded-lg border-2 border-zinc-400 bg-zinc-100 p-4 shadow-2xl ${
           uploadState.isVisible ? '' : 'hidden'
         }`}>
         <div>
@@ -97,7 +104,7 @@ export default function Header() {
           <input
             type='file'
             ref={fileRef}
-            className='text-sm file:rounded-lg file:border-0 file:bg-zinc-500 file:p-2 file:px-4 file:text-white file:hover:cursor-pointer file:hover:bg-zinc-700 file:active:bg-zinc-500'
+            className='text-sm file:rounded-lg file:border-0 file:bg-zinc-500 file:p-2 file:px-4 file:text-white file:hover:cursor-pointer file:hover:bg-zinc-700 file:active:bg-zinc-100'
           />
           <button
             onClick={handleUploadFile}

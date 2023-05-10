@@ -17,7 +17,9 @@ export default function App({ Component, pageProps }) {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <Layout>
-          <Component {...pageProps} />
+          <div className='flex h-full min-h-screen w-screen justify-center bg-zinc-200 pt-20 font-sans'>
+            <Component {...pageProps} />
+          </div>
         </Layout>
         <ReactQueryDevtools initialIsOpen={false} />
       </Hydrate>

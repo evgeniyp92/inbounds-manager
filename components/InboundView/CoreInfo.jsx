@@ -22,19 +22,25 @@ import { faker } from '@faker-js/faker';
  * @returns
  */
 
-export function CoreInfo({}) {
+export function CoreInfo({ rank, name, maritalStatus, afsc, losingPas }) {
   return (
     <div className='flex flex-col justify-center space-y-2 md:items-start'>
-      <div className='text-center text-3xl font-bold tracking-tight md:text-7xl'>
-        <span className='block md:inline'>{`[RANK]`}</span>{' '}
-        <h1 className='block md:inline'>{`[Last], [First] [Mi]`}</h1>
+      <div className='text-center text-3xl font-bold tracking-tight md:text-left md:text-7xl'>
+        <span className='block md:inline'>{rank}</span>{' '}
+        <h1 className='block md:inline'>
+          {`${name.split(',')[0]},`}
+          <span className='capitalize'>{`${name
+            .split(',')[1]
+            .toLowerCase()}`}</span>
+        </h1>
       </div>
-      {/* <h4 className='text-center font-light tracking-tight md:text-2xl'>{`${
-        ['Single', 'Married', 'Divorced'][Math.floor(Math.random() * 3)]
-      } 1D7${['1', '3', '5', '7', '9'][Math.floor(Math.random() * 5)]}1${
-        ['Q', 'D', 'X', 'Z'][Math.floor(Math.random() * 4)]
-      } arriving from OL MLST 336 TRAINING SQ FFJLP1`}</h4> */}
-      <h4 className='text-center font-light tracking-tight md:text-2xl'>{`[Marriage status] [AFSC] coming from [LOSING PAS CLEARTEXT]`}</h4>
+      <h4 className='text-center font-light tracking-tight md:text-2xl'>{`${
+        maritalStatus === 'S'
+          ? 'Single'
+          : maritalStatus === 'M'
+          ? 'Married'
+          : 'Divorced'
+      } ${afsc.slice(1)} coming from ${losingPas}`}</h4>
     </div>
   );
 }

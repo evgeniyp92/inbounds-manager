@@ -29,7 +29,7 @@ const MenuDropDownButton = ({ hideOnMobile, children }) => {
             setDropdownOpen(true);
           }
         }}
-        className={`items-center rounded-lg border-2 border-zinc-500 p-2 px-4 text-zinc-900 duration-150 hover:bg-zinc-200 md:flex md:space-x-2 ${
+        className={`items-center rounded-lg border-2 border-zinc-500 p-2 pl-4 pr-2 text-zinc-900 duration-150 hover:bg-zinc-200 md:flex ${
           dropdownOpen && 'bg-zinc-200'
         }`}>
         {children}

@@ -47,6 +47,10 @@ const InboundSchema = new mongoose.Schema({
     type: Date,
     required: [true, 'No RNLTD specified'],
   },
+  losingPas: {
+    type: String,
+    required: [true, 'No losing PAS specified'],
+  },
 });
 
 module.exports =

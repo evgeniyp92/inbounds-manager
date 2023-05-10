@@ -52,6 +52,7 @@ export default async function handler(req, res) {
             maritalStatus: gain['MARITAL_STATUS'],
             assignedSponsor: null,
             rnltd: new Date((gain['RNLTD'] - 25569) * 86400 * 1000),
+            losingPas: gain['LOSING_PAS_CLEARTEXT'],
           });
         } catch (error) {
           reject(error);
