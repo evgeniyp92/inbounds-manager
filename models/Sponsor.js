@@ -14,3 +14,6 @@ const SponsorSchema = new mongoose.Schema({
     required: [true, 'Must have a phone number'],
   },
 });
+
+module.exports =
+  mongoose.models.Sponsor ?? mongoose.model('Sponsor', SponsorSchema);

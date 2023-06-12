@@ -14,7 +14,7 @@ export async function getStaticProps() {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 10,
+    revalidate: 1 * 24 * 60 * 60, // 1 day
   };
 }
 
@@ -27,6 +27,7 @@ export default function Home() {
   return (
     <div className='container mx-auto max-w-6xl p-4'>
       {isSuccess &&
+        data.inboundsList.length !== 0 &&
         data.inboundsList.map(inbound => (
           <ListItem key={inbound._id} inbound={inbound} />
         ))}

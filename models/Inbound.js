@@ -54,4 +54,4 @@ const InboundSchema = new mongoose.Schema({
 });
 
 module.exports =
-  mongoose.models.Inbound || mongoose.model('Inbound', InboundSchema);
+  mongoose.models.Inbound ?? mongoose.model('Inbound', InboundSchema);

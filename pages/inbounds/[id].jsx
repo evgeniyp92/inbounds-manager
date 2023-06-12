@@ -10,7 +10,6 @@ async function getOneInbound(id) {
 }
 
 export async function getServerSideProps({ params }) {
-  console.log(params);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['inbound', params.id], () =>
     getOneInbound(params.id)

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { read, utils as xlsxUtils } from 'xlsx/xlsx.mjs';
 import Inbound from '../../models/Inbound';
+import Sponsor from '../../models/Sponsor';
 import dbConnect from '@/lib/dbConnect';
 
 export default async function handler(req, res) {
@@ -41,6 +42,7 @@ export default async function handler(req, res) {
     const gainsListingJSON = xlsxUtils.sheet_to_json(
       workbook.Sheets['GAINS LISTING']
     );
+    const alphaRosterJSON = xlsxUtils.sheet_to_json(workbook.Sheets['ALPHA']);
     await new Promise(async (resolve, reject) => {
       await dbConnect();
       for (const gain of gainsListingJSON) {
@@ -53,6 +55,17 @@ export default async function handler(req, res) {
             assignedSponsor: null,
             rnltd: new Date((gain['RNLTD'] - 25569) * 86400 * 1000),
             losingPas: gain['LOSING_PAS_CLEARTEXT'],
+          });
+        } catch (error) {
+          reject(error);
+        }
+      }
+      for (const sponsor of alphaRosterJSON) {
+        try {
+          await Sponsor.create({
+            name: sponsor['FULL_NAME'],
+            rank: sponsor['GRADE'],
+            dutyPhone: sponsor['DUTY_PHONE'],
           });
         } catch (error) {
           reject(error);

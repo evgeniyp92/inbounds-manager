@@ -8,7 +8,7 @@ const getUsers = async (req, res) => {
     const users = await Inbound.find({});
     res.status(200).json({ success: true, inboundsList: users });
   } catch (error) {
-    res.status(400).json({ success: false });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
